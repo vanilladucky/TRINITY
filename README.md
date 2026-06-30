@@ -67,6 +67,32 @@ import numpy as np
 feat = np.load("data/event/event_features/video_1.npz")["data"]  # (T, 512)
 ```
 
+### Setting dataset paths
+
+By default, [`model/full_dataset.py`](model/full_dataset.py) reads all data from `data/` at the repository root (i.e. wherever `download_data.py` extracted it), controlled by `TRINITY_DATA_ROOT` (defaults to `data`). If your data lives somewhere else, or you only downloaded a subset of perspectives, override individual paths via environment variables instead:
+
+| Variable | Default | Description |
+|---|---|---|
+| `TRINITY_DATA_ROOT` | `data` | Root directory all other defaults are computed relative to |
+| `TRINITY_EVENT_SPLIT` | `$TRINITY_DATA_ROOT/event/mr_hisum_split_original.json` | Event split file |
+| `TRINITY_EVENT_FEATURES` | `$TRINITY_DATA_ROOT/event/event_features` | Event feature `.npz` directory |
+| `TRINITY_EVENT_GT` | `$TRINITY_DATA_ROOT/event/event_gt` | Event ground-truth `.npz` directory |
+| `TRINITY_EMOTION_SPLIT` | `$TRINITY_DATA_ROOT/emotion/emotion_split.json` | Emotion split file |
+| `TRINITY_EMOTION_FEATURES` | `$TRINITY_DATA_ROOT/emotion/features` | Emotion feature `.npz` directory |
+| `TRINITY_EMOTION_GT` | `$TRINITY_DATA_ROOT/emotion/ground_truth` | Emotion ground-truth `.npz` directory |
+| `TRINITY_NATURE_SPLIT` | `$TRINITY_DATA_ROOT/nature/nature_split.json` | Nature split file |
+| `TRINITY_NATURE_FEATURES` | `$TRINITY_DATA_ROOT/nature/features` | Nature feature `.npz` directory |
+| `TRINITY_NATURE_GT` | `$TRINITY_DATA_ROOT/nature/ground_truth` | Nature ground-truth `.json` directory |
+
+Example, pointing only the Event paths at a custom location:
+
+```bash
+export TRINITY_EVENT_SPLIT=/path/to/mr_hisum_split_original.json
+export TRINITY_EVENT_FEATURES=/path/to/event_features
+export TRINITY_EVENT_GT=/path/to/event_gt
+python train.py
+```
+
 ## 🏗️ Model
 
 ```

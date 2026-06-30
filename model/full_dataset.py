@@ -19,51 +19,51 @@ from torch.utils.data import Dataset
 DATA_ROOT = os.environ.get("TRINITY_DATA_ROOT", "data")
 
 # ==========================================
-# 1. Event Dataset Paths (事件视角)
+# 1. Event Dataset Paths
 # ==========================================
 EVENT_SPLIT_JSON = os.environ.get(
-    "TRINITY_EVENT_SPLIT", 
-    "/data2/qianqian/rebuttal_experiment/Event_data/mr_hisum_split_original.json"
+    "TRINITY_EVENT_SPLIT",
+    os.path.join(DATA_ROOT, "event", "mr_hisum_split_original.json")
 )
 EVENT_FEATURE_ROOT = os.environ.get(
-    "TRINITY_EVENT_FEATURES", 
-    "/data2/qianqian/rebuttal_experiment/event_camera_ready"
+    "TRINITY_EVENT_FEATURES",
+    os.path.join(DATA_ROOT, "event", "event_features")
 )
 EVENT_GT_ROOT = os.environ.get(
-    "TRINITY_EVENT_GT", 
-    "/data2/qianqian/rebuttal_experiment/event_camera_ready_gt"
+    "TRINITY_EVENT_GT",
+    os.path.join(DATA_ROOT, "event", "event_gt")
 )
 
 # ==========================================
-# 2. Emotion Dataset Paths (情绪视角)
+# 2. Emotion Dataset Paths
 # ==========================================
 EMOTION_SPLIT_JSON = os.environ.get(
-    "TRINITY_EMOTION_SPLIT", 
-    "/data2/qianqian/rebuttal_experiment/Kim_emotion_old/dataset_splits_emotion_reduced16257.json"
+    "TRINITY_EMOTION_SPLIT",
+    os.path.join(DATA_ROOT, "emotion", "emotion_split.json")
 )
 EMOTION_FEATURE_ROOT = os.environ.get(
-    "TRINITY_EMOTION_FEATURES", 
-    "/data2/qianqian/rebuttal_experiment/Kim_emotion_old/5s_features"
+    "TRINITY_EMOTION_FEATURES",
+    os.path.join(DATA_ROOT, "emotion", "features")
 )
 EMOTION_GT_ROOT = os.environ.get(
-    "TRINITY_EMOTION_GT", 
-    "/data2/qianqian/rebuttal_experiment/Kim_emotion_old/5s_ground_truth"
+    "TRINITY_EMOTION_GT",
+    os.path.join(DATA_ROOT, "emotion", "ground_truth")
 )
 
 # ==========================================
-# 3. Nature Dataset Paths (自然风景视角)
+# 3. Nature Dataset Paths
 # ==========================================
 NATURE_SPLIT_JSON = os.environ.get(
-    "TRINITY_NATURE_SPLIT", 
-    "/data2/qianqian/rebuttal_experiment/Nature_data/nature_split_2.json"
+    "TRINITY_NATURE_SPLIT",
+    os.path.join(DATA_ROOT, "nature", "nature_split.json")
 )
 NATURE_FEATURE_ROOT = os.environ.get(
-    "TRINITY_NATURE_FEATURES", 
-    "/data2/qianqian/rebuttal_experiment/nature_camera_ready"
+    "TRINITY_NATURE_FEATURES",
+    os.path.join(DATA_ROOT, "nature", "features")
 )
 NATURE_GT_ROOT = os.environ.get(
-    "TRINITY_NATURE_GT", 
-    "/data2/qianqian/rebuttal_experiment/nature_camera_ready_gt"
+    "TRINITY_NATURE_GT",
+    os.path.join(DATA_ROOT, "nature", "ground_truth")
 )
 
 
@@ -497,10 +497,6 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-# 注意：请确保你代码上下文中已经定义了以下全局变量，或者在此处自行指定路径：
-# NATURE_FEATURE_ROOT = "/data2/qianqian/rebuttal_experiment/nature_camera_ready"
-# NATURE_GT_ROOT = "你的标签JSON文件夹路径"
-# NATURE_SPLIT_JSON = "/data2/qianqian/rebuttal_experiment/Nature_data/nature_split.json"
 
 class NatureDataset(Dataset):
     """Nature-perspective dataset produced by the scenic-localization + aesthetic-scoring pipeline."""
