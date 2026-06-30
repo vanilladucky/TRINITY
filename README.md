@@ -55,28 +55,17 @@ Each perspective ships as numbered zip shards of per-video `.npz` (and, for Natu
 
 ```bash
 pip install huggingface_hub
-python -c "
-from huggingface_hub import snapshot_download
-snapshot_download(repo_id='vanilladucky/TRINITY', repo_type='dataset', local_dir='data/trinity_raw')
-"
+python download_data.py --perspectives event,emotion,nature --data-root data
 ```
 
-Unzip the shards for whichever perspectives you need:
-
-```bash
-cd data/trinity_raw
-for f in event/event_features_part_*.zip; do unzip -o "$f" -d event_features/; done
-unzip -o event/event_gt_part_1.zip -d event_gt/
-```
+This populates `data/` in the flat per-perspective layout expected by [`model/full_dataset.py`](model/full_dataset.py) (feature/ground-truth shards extracted, split files downloaded). It's idempotent — re-running skips shards already extracted, so it's safe to call repeatedly on a persistent volume. Use `--perspectives` to download a subset, e.g. `--perspectives event`.
 
 Each feature/ground-truth `.npz` can then be loaded directly with NumPy:
 
 ```python
 import numpy as np
-feat = np.load("event_features/video_1.npz")["data"]  # (T, 512)
+feat = np.load("data/event/event_features/video_1.npz")["data"]  # (T, 512)
 ```
-
-> **Note**: `MrHiSumDataset` in [`model/full_dataset.py`](model/full_dataset.py) currently reads the Event perspective from a single combined `.h5` file (`features` / `gtscore` keys per video group) rather than the per-video `.npz` shards above. If loading directly from the Hugging Face release, adapt `MrHiSumDataset` to read the `.npz` shards (key `"data"`) or build an `.h5` file from them first. `EmotionDataset` and `NatureDataset` already expect the per-video `.npz` / `.json` layout used by the release.
 
 ## 🏗️ Model
 
@@ -125,12 +114,6 @@ python train.py \
 ```
 
 This jointly optimizes the shared backbone and the three perspective-specific expert branches with round-robin batching (one mini-batch per perspective per step), and reports per-perspective `mAP@50%` / `mAP@15%` on the validation split each epoch. Checkpoints, training history, and gradient-conflict diagnostics (Fig. 4 in the paper) are written to `Summaries/<model>/<tag>/`.
-
-**Useful flags:**
-- `--use_CovLoss`: enable the covariance-based orthogonality regularizer between perspective embeddings (only with `--model SL_module_split`).
-- `--use_smoothap`: add the SmoothAP ranking loss and a temporal-gradient consistency term on top of BCE.
-- `--projection_dim_count`: project input features to a different dimension before the backbone (default: 512, i.e. no projection).
-- `--profile_fps`: after training (or loading a checkpoint), measure feature-level inference throughput.
 
 ### Gradient-conflict ablation (Aligned-MTL)
 
