@@ -4,13 +4,26 @@
 [![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-TRINITY-yellow)](https://huggingface.co/datasets/vanilladucky/TRINITY)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+Qianqian Chen\*, Hyun Bin Kim\*, Denzel Elden Wijaya, Yang Yi, Bo Liu<sup>✉</sup>, and Yangkai Ding<sup>✉</sup>
+
+Huawei Technologies Co., Ltd.
+
+<sup>\*</sup>Equal Contribution. <sup>✉</sup>Corresponding Author.
+
 Official PyTorch implementation of **TRINITY**, a multi-perspective benchmark that decomposes video highlight saliency into three complementary perspectives — **Event**, **Emotion**, and **Nature** — within a unified temporal framework, together with a shared-backbone, multi-branch architecture that predicts all three perspectives in parallel from a single input sequence.
 
 > Traditional video highlight detection relies on a narrow, event-centric definition of saliency, which often fails to generalize to unconstrained personal videos where highlights are heterogeneous and perspective-dependent. TRINITY addresses this by decomposing highlight saliency into Event, Emotion, and Nature perspectives, and proposes a shared-backbone multi-branch architecture with view-specific experts for parallel multi-perspective prediction.
 
+<table>
+<tr>
+<td><img src="assets/photo2.png" alt="photo2" width="100%"></td>
+<td><img src="assets/photo3.png" alt="photo3" width="100%"></td>
+</tr>
+</table>
+
 ## 📢 News
 
-- **[2026]** Code and the TRINITY dataset are publicly released.
+- **[June 2026]** Code and the TRINITY dataset are publicly released.
 
 ## Table of Contents
 
@@ -33,7 +46,7 @@ conda activate trinity
 pip install -r requirements.txt
 ```
 
-Tested with Python 3.10, PyTorch >= 2.0, and CUDA 11.8+. A single modern GPU (>= 16GB) is sufficient, since the model operates on pre-extracted 512-dim CLIP ViT-B/32 features rather than raw video.
+Tested with Python 3.8.8, PyTorch 1.13.1, and CUDA 11.7. A single modern GPU (tested with NVIDIA GeForce RTX 3090) is sufficient, since the model operates on pre-extracted 512-dim CLIP ViT-B/32 features rather than raw video.
 
 ## 🗂️ Dataset
 
@@ -69,7 +82,27 @@ feat = np.load("data/event/event_features/video_1.npz")["data"]  # (T, 512)
 
 ### Setting dataset paths
 
-By default, [`model/full_dataset.py`](model/full_dataset.py) reads all data from `data/` at the repository root (i.e. wherever `download_data.py` extracted it), controlled by `TRINITY_DATA_ROOT` (defaults to `data`). If your data lives somewhere else, or you only downloaded a subset of perspectives, override individual paths via environment variables instead:
+[`model/full_dataset.py`](model/full_dataset.py) reads all data through environment variables, falling back to `data/<perspective>/...` (relative to `TRINITY_DATA_ROOT`, default `data`) if unset — which is exactly the layout `download_data.py` produces. If you ran the download command above with the default `--data-root data` from the repository root, the defaults already work and you can skip straight to [Training](#training).
+
+Otherwise, paste this right after downloading to point everything at your actual data location:
+
+```bash
+export TRINITY_DATA_ROOT=data
+
+export TRINITY_EVENT_SPLIT=$TRINITY_DATA_ROOT/event/mr_hisum_split_original.json
+export TRINITY_EVENT_FEATURES=$TRINITY_DATA_ROOT/event/event_features
+export TRINITY_EVENT_GT=$TRINITY_DATA_ROOT/event/event_gt
+
+export TRINITY_EMOTION_SPLIT=$TRINITY_DATA_ROOT/emotion/emotion_split.json
+export TRINITY_EMOTION_FEATURES=$TRINITY_DATA_ROOT/emotion/features
+export TRINITY_EMOTION_GT=$TRINITY_DATA_ROOT/emotion/ground_truth
+
+export TRINITY_NATURE_SPLIT=$TRINITY_DATA_ROOT/nature/nature_split.json
+export TRINITY_NATURE_FEATURES=$TRINITY_DATA_ROOT/nature/features
+export TRINITY_NATURE_GT=$TRINITY_DATA_ROOT/nature/ground_truth
+```
+
+Just change `TRINITY_DATA_ROOT` on the first line if your `data/` directory lives somewhere other than the repository root, or override any individual variable to point at a custom location:
 
 | Variable | Default | Description |
 |---|---|---|
@@ -83,15 +116,6 @@ By default, [`model/full_dataset.py`](model/full_dataset.py) reads all data from
 | `TRINITY_NATURE_SPLIT` | `$TRINITY_DATA_ROOT/nature/nature_split.json` | Nature split file |
 | `TRINITY_NATURE_FEATURES` | `$TRINITY_DATA_ROOT/nature/features` | Nature feature `.npz` directory |
 | `TRINITY_NATURE_GT` | `$TRINITY_DATA_ROOT/nature/ground_truth` | Nature ground-truth `.json` directory |
-
-Example, pointing only the Event paths at a custom location:
-
-```bash
-export TRINITY_EVENT_SPLIT=/path/to/mr_hisum_split_original.json
-export TRINITY_EVENT_FEATURES=/path/to/event_features
-export TRINITY_EVENT_GT=/path/to/event_gt
-python train.py
-```
 
 ## 🏗️ Model
 
@@ -127,16 +151,7 @@ The proposed model corresponds to `--model SL_module_split` in `train.py`, which
 Joint pretraining on all three TRINITY perspectives:
 
 ```bash
-python train.py \
-    --train true \
-    --device cuda:0 \
-    --model SL_module_split \
-    --epochs 50 \
-    --batch_size 16 \
-    --lr 5e-5 \
-    --l2_reg 1e-4 \
-    --dropout_ratio 0.2 \
-    --tag trinity_pretrain
+python train.py
 ```
 
 This jointly optimizes the shared backbone and the three perspective-specific expert branches with round-robin batching (one mini-batch per perspective per step), and reports per-perspective `mAP@50%` / `mAP@15%` on the validation split each epoch. Checkpoints, training history, and gradient-conflict diagnostics (Fig. 4 in the paper) are written to `Summaries/<model>/<tag>/`.
@@ -160,6 +175,7 @@ If you find this work useful, please cite:
 ```bibtex
 @inproceedings{trinity2026,
   title     = {TRINITY: A Multi-Perspective Benchmark for Personal-Style Video Highlight Detection},
+  author    = {Chen, Qianqian and Kim, Hyun Bin and Wijaya, Denzel Elden and Yi, Yang and Liu, Bo and Ding, Yangkai},
   booktitle = {European Conference on Computer Vision (ECCV)},
   year      = {2026}
 }
