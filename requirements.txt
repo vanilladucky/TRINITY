@@ -1,0 +1,9 @@
+torch==1.13.1+cu117
+--extra-index-url https://download.pytorch.org/whl/cu117
+numpy
+h5py
+pandas
+scikit-learn
+einops
+tqdm
+matplotlib
