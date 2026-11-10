@@ -1,21 +1,19 @@
-<p align="center">
-  <img src="./264091041.jfif" alt="TRINITY Logo" width="220">
-</p>
-
-# TRINITY: A Multi-Perspective Benchmark for Personal-Style Video Highlight Detection (ECCV 2026)
-
 <div align="center">
+  <img src="./264091041.jfif" alt="openJiuwen Logo" width="180">
 
-[![GitHub](https://img.shields.io/badge/GitHub-TRINITY-181717?logo=github)](https://github.com/vanilladucky/TRINITY)
-[![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-TRINITY-yellow)](https://huggingface.co/datasets/vanilladucky/TRINITY)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+  <h2>openJiuwen</h2>
 
-Qianqian Chen\*, Hyun Bin Kim\*, Denzel Elden Wijaya, Yang Yi, Bo Liu<sup>✉</sup>, and Yangkai Ding<sup>✉</sup>
+  <h1>TRINITY: A Multi-Perspective Benchmark for Personal-Style Video Highlight Detection (ECCV 2026)</h1>
 
-Huawei Technologies Co., Ltd.
+  [![GitHub](https://img.shields.io/badge/GitHub-TRINITY-181717?logo=github)](https://github.com/vanilladucky/TRINITY)
+  [![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-TRINITY-yellow)](https://huggingface.co/datasets/vanilladucky/TRINITY)
+  [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-<sup>\*</sup>Equal Contribution. <sup>✉</sup>Corresponding Author.
+  Qianqian Chen\*, Hyun Bin Kim\*, Denzel Elden Wijaya, Yang Yi, Bo Liu<sup>✉</sup>, and Yangkai Ding<sup>✉</sup>
 
+  Huawei Technologies Co., Ltd.
+
+  <sup>\*</sup>Equal Contribution. <sup>✉</sup>Corresponding Author.
 </div>
 
 Official PyTorch implementation of **TRINITY**, a multi-perspective benchmark that decomposes video highlight saliency into three complementary perspectives — **Event**, **Emotion**, and **Nature** — within a unified temporal framework, together with a shared-backbone, multi-branch architecture that predicts all three perspectives in parallel from a single input sequence.
