@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./264091041.jfif" alt="TRINITY Logo" width="220">
+</p>
+
 # TRINITY: A Multi-Perspective Benchmark for Personal-Style Video Highlight Detection (ECCV 2026)
 
 <div align="center">
