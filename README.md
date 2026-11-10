@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./264091041.jfif" alt="openJiuwen Logo" width="180">
 
-  <h2>openJiuwen</h2>
+  <h1><big><big>openJiuwen</big></big></h1>
 
   <h1>TRINITY: A Multi-Perspective Benchmark for Personal-Style Video Highlight Detection (ECCV 2026)</h1>
 
